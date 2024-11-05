@@ -1,13 +1,24 @@
 package com.jeictechnology.literAlura;
 
+import com.jeictechnology.literAlura.principal.Principal;
+import com.jeictechnology.literAlura.repository.ILibroRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class LiterAluraApplication {
+public class LiterAluraApplication implements CommandLineRunner {
 
+	@Autowired
+	private ILibroRepository iLibroRepository;
 	public static void main(String[] args) {
 		SpringApplication.run(LiterAluraApplication.class, args);
 	}
 
+	@Override
+	public void run(String... args) throws Exception {
+		Principal principal = new Principal(iLibroRepository);
+		principal.muestraMenu();
+	}
 }

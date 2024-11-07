@@ -1,8 +1,7 @@
 package com.jeictechnology.literAlura.principal;
 
-import com.jeictechnology.literAlura.model.DatosLibro;
-import com.jeictechnology.literAlura.model.Libro;
-import com.jeictechnology.literAlura.model.RespuestaLibro;
+import com.jeictechnology.literAlura.model.*;
+import com.jeictechnology.literAlura.repository.IAutorRepository;
 import com.jeictechnology.literAlura.repository.ILibroRepository;
 import com.jeictechnology.literAlura.service.ConsumoAPI;
 import com.jeictechnology.literAlura.service.ConvierteDatos;
@@ -24,8 +23,11 @@ public class Principal {
 
     private final ILibroRepository iLibroRepository;
 
-    public Principal(ILibroRepository iLibroRepository) {
+    private final IAutorRepository iAutorRepository;
+
+    public Principal(ILibroRepository iLibroRepository, IAutorRepository iAutorRepository) {
         this.iLibroRepository = iLibroRepository;
+        this.iAutorRepository = iAutorRepository;
     }
 
     public void muestraMenu() {
@@ -36,6 +38,9 @@ public class Principal {
                     --------SISTEMA BUSQUEDA DE LIBROS--------                    
                     1- Buscar libro por título
                     2- Libros disponibles
+                    3- Autores 
+                    4- Autores vivos en un determiando año
+                    5- Libros por idioma
                     
                     0- Salir
                     """;
@@ -50,6 +55,9 @@ public class Principal {
                 case 2:
                     listarLibros();
                     break;
+                case 3:
+                    listarAutores();
+                    break;
                 default:
                     System.out.println("Opción no válida");
             }
@@ -60,7 +68,7 @@ public class Principal {
     private void buscarLibro() {
         DatosLibro datosLibro = obtenerDatosLibro();
         Libro libro = new Libro(datosLibro);
-        if (iLibroRepository.existsByTituloAndAutores(libro.getTitulo(), libro.getAutores())){
+        if (iLibroRepository.existsByTituloAndAutorName(libro.getTitulo(), libro.getAutor().getName())){
             System.out.println("******************** Datos Libro buscado ********************");
             System.out.println(libro.toString());
         }else {
@@ -89,6 +97,13 @@ public class Principal {
         List<Libro> listaLibros = iLibroRepository.findAll();
         System.out.println("-*-*-*-*-*-*-*-*-* Lista de libros disponibles *-*-*-*-*-*-*-*-"+"\n");
         listaLibros.stream()
-                .forEach(libro -> System.out.println(libro.getTitulo()+" ("+libro.getAutores()+")"));
+                .forEach(libro -> System.out.println(libro.getTitulo()+" ("+libro.getAutor().getName()+")"));
+    }
+
+    private void listarAutores(){
+        List<Autor> listaAutores = iAutorRepository.findAll();
+        System.out.println("-*-*-*-*-*-*-*-*-* Lista de autores disponibles *-*-*-*-*-*-*-*-"+"\n");
+        listaAutores.stream()
+                .forEach(autor -> System.out.println(autor.getName()));
     }
 }

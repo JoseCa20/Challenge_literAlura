@@ -2,9 +2,8 @@ package com.jeictechnology.literAlura.model;
 
 import jakarta.persistence.*;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "libros")
@@ -16,9 +15,11 @@ public class Libro {
 
     private String titulo;
 
-    private String autores;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "autor_id")
+    private Autor autor;
 
-    private String lenguajes;
+    private String lenguaje;
 
     private Integer descargas;
 
@@ -28,11 +29,8 @@ public class Libro {
 
     public Libro(DatosLibro datosLibro) {
         this.titulo = datosLibro.titulo();
-        this.autores = datosLibro.autores().stream()
-                .findFirst()
-                .map(Autor::nombre)
-                .orElse("Desconocido");
-        this.lenguajes = datosLibro.lenguajes().stream()
+        this.autor = datosLibro.autor().isEmpty() ? null : new Autor(datosLibro.autor().get(0));
+        this.lenguaje = datosLibro.lenguaje().stream()
                 .findFirst()
                 .orElse("Desconocido");
         this.descargas = datosLibro.descargas();
@@ -54,20 +52,20 @@ public class Libro {
         this.titulo = titulo;
     }
 
-    public String getAutores() {
-        return autores;
+    public Autor getAutor() {
+        return autor;
     }
 
-    public void setAutores(String autores) {
-        this.autores = autores;
+    public void setAutor(Autor autor) {
+        this.autor = autor;
     }
 
-    public String getLenguajes() {
-        return lenguajes;
+    public String getLenguaje() {
+        return lenguaje;
     }
 
-    public void setLenguajes(String lenguajes) {
-        this.lenguajes = lenguajes;
+    public void setLenguaje(String lenguaje) {
+        this.lenguaje = lenguaje;
     }
 
     public Integer getDescargas() {
@@ -81,8 +79,8 @@ public class Libro {
     @Override
     public String toString() {
         return  "titulo = " + titulo + '\n' +
-                "autores = " + autores + '\n' +
-                "lenguaje = " + lenguajes + '\n' +
+                "autor = " + autor.getName() + '\n' +
+                "lenguaje = " + lenguaje + '\n' +
                 "número total de descargas = " + descargas + '\n';
     }
 }

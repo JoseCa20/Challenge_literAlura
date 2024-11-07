@@ -8,15 +8,15 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record DatosLibro(
         @JsonAlias("title") String titulo,
-        @JsonAlias("authors") List<Autor> autores,
-        @JsonAlias("languages")List<String> lenguajes,
+        @JsonAlias("authors") List<DatosAutor> autor,
+        @JsonAlias("languages")List<String> lenguaje,
         @JsonAlias("download_count")Integer descargas
 ) {
     @Override
     public String toString() {
         return  "titulo='" + titulo + '\'' +
-                ", autor=" + autores +
-                ", lenguaje=" + lenguajes +
+                ", autor=" + autor +
+                ", lenguaje=" + lenguaje +
                 ", descargas=" + descargas +
                 '}';
     }

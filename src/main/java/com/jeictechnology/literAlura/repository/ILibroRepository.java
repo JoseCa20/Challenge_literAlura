@@ -5,5 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface ILibroRepository extends JpaRepository<Libro, Long> {
-    boolean existsByTituloAndAutores(String titulo, String autores);
+    boolean existsByTituloAndAutorName(String titulo, String autor);
+
 }

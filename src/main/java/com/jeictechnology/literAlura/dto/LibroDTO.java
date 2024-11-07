@@ -3,7 +3,7 @@ package com.jeictechnology.literAlura.dto;
 public record LibroDTO(
         Long id,
         String titulo,
-        String autores,
+        String autor,
         String lenguaje,
         Integer descargas
 ) {

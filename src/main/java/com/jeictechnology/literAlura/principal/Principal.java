@@ -8,7 +8,9 @@ import com.jeictechnology.literAlura.service.ConvierteDatos;
 
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 
 public class Principal {
@@ -39,7 +41,7 @@ public class Principal {
                     1- Buscar libro por título
                     2- Libros disponibles
                     3- Autores 
-                    4- Autores vivos en un determiando año
+                    4- Autores vivos en un determinado año
                     5- Libros por idioma
                     
                     0- Salir
@@ -57,6 +59,12 @@ public class Principal {
                     break;
                 case 3:
                     listarAutores();
+                    break;
+                case 4:
+                    autoresVivosPorAnio();
+                    break;
+                case 5:
+                    librosPorIdioma();
                     break;
                 default:
                     System.out.println("Opción no válida");
@@ -105,5 +113,32 @@ public class Principal {
         System.out.println("-*-*-*-*-*-*-*-*-* Lista de autores disponibles *-*-*-*-*-*-*-*-"+"\n");
         listaAutores.stream()
                 .forEach(autor -> System.out.println(autor.getName()));
+    }
+
+    private void autoresVivosPorAnio(){
+        System.out.println("Por favor ingresa el año inicial");
+        var anioInicial = teclado.nextInt();
+
+        System.out.println("Por favor ingresa el año final");
+        var anioFinal = teclado.nextInt();
+
+        List<Autor> listaAutores = iAutorRepository.findAll();
+
+        List<Autor> listaAutoresVivos = listaAutores.stream()
+                .filter(autor -> autor.getAnioNacimiento() >= anioInicial && autor.getAnioFallecimiento() <= anioFinal)
+                .collect(Collectors.toList());
+        listaAutoresVivos.stream()
+                .forEach(a -> System.out.println("Autores vivos entre " + anioInicial + " - " + anioFinal + "\n"
+                        + a.getName()));
+    }
+
+    private void librosPorIdioma(){
+        System.out.println("Selecciona el idioma del libro (por ejemplo: 'es', 'en', 'fr', etc.): ");
+        var idioma = teclado.nextLine();
+
+        List<Libro> listaLibros = iLibroRepository.findByLenguaje(idioma);
+
+        listaLibros.stream()
+                .forEach(libro -> System.out.println("\n"+libro.getTitulo()+" ("+libro.getAutor().getName()+")"));
     }
 }
